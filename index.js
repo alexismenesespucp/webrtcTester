@@ -138,14 +138,15 @@ server.on("upgrade", (request, socket, head) => {
       break;
       
       default:
-        console.log("no action take for");
-        console.log(data);
-              // if (
-              //   ws_clients[data.destiny] !== ws &&
-              //   ws_clients[data.destiny].readyState === wss.OPEN
-              // ) {
-              //   ws_clients[data.destiny].send(JSON.stringify(data));
-              // }
+               if (
+                 ws_clients[data.destiny] && ws_clients[data.destiny] !== ws &&
+                 ws_clients[data.destiny].readyState === wss.OPEN
+               ) {
+                 ws_clients[data.destiny].send(JSON.stringify(data));
+               }
+               else{
+                console.log("the user ", data.destiny, " doesnt exist");
+               }
 
       break;
     }
