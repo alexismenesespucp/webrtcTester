@@ -39,7 +39,7 @@ let login = (data)=>{
 }
 
 let make_call = () => {
-  webRTC.make_call();
+  webRTC.make_call({destination:document.getElementById("destination").value});
 }
 
 document.getElementById("call").onclick = make_call;
