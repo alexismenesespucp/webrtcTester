@@ -4,7 +4,7 @@ let webRTC = new WebRTC();
 
 let start_connection = () => {
   
-    let controller = new WebSocket("wss://mittsu-talk.jp/twinrobot/");
+    let controller = new WebSocket("wss://qhali-care.com/webrtc/ws/");
     
     webRTC.updateUsername(document.getElementById("username").value);
  
