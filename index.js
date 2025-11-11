@@ -51,7 +51,7 @@ wsServer.on("connection", (ws) => {
         break;
       default:
         delete ws_clients[ws.username];
-          for (let name of ws_clients) {
+          for (let name in ws_clients) {
             if (
               ws_clients[name] !== ws &&
               ws_clients[name].readyState === wss.OPEN
@@ -104,7 +104,7 @@ server.on("upgrade", (request, socket, head) => {
         server_response.typedata = data.typedata;
         server_response.result = "ok";
         server_response.users = [];
-            for (let name of ws_clients) {
+            for (let name in ws_clients) {
               if (
                 ws_clients[name] !== ws &&
                 ws_clients[name].readyState === wss.OPEN
