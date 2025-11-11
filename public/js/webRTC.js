@@ -62,7 +62,7 @@ export default class WebRTC{
 					urls: 'turn:qhali-care.com:3478',
 					username: 'webrtc',
       				credential: 'verysecret'
-			}],
+			}],iceTransportPolicy : "relay"
 		};
 		let RTCSender = new window.RTCPeerConnection(rtc_configuration);
 		webrtc.conections_rtc[data.destination] = RTCSender;
@@ -122,7 +122,7 @@ export default class WebRTC{
 					urls: 'turn:qhali-care.com:3478',
 					username: 'webrtc',
       				credential: 'verysecret'
-			}],
+			}],iceTransportPolicy : "relay"
 		};
 		let RTCReceiver= new window.RTCPeerConnection(rtc_configuration);
 		webrtc.conections_rtc[data.user]= RTCReceiver;
