@@ -72,8 +72,8 @@ export default class WebRTC{
 		};
 		let channel = RTCSender.createDataChannel("RobotInstrucctions");
 		//processDataChannel(data,channel,webrtc);
-		/*
-		webrtc.channels_rtc[data.destination] = channel;*/
+		
+		webrtc.channels_rtc[data.destination] = channel;
 		channel.onopen =  () => {
 			webrtc.updateonopencaller(channel,webrtc);
 		};		
@@ -83,8 +83,7 @@ export default class WebRTC{
 		};				  	
 		
 		channel.onmessage = (event)=>{
-			console.log(event.data);
-			//webrtc.processdatachannel(event.data,channel,webrtc);
+			webrtc.processdatachannel(event.data,channel,webrtc);
 		}
 		
 		RTCSender.addStream(webrtc.local_stream[num]);//streamに追加
@@ -122,18 +121,14 @@ export default class WebRTC{
 
 		//RTCReceiver.ondatachannel = (event)=> processDataChannel(event);
 		RTCReceiver.ondatachannel = (event) =>{
-			//webrtc.channels_rtc[data.user] = event.channel;
-			//webrtc.channels_rtc[data.user].onmessage = (event) =>{
-			event.channel.onmessage = (event) =>{
-				console.log(event.data);
-				//webrtc.processdatachannel(event.data,webrtc.channels_rtc[data.user],webrtc);
+			webrtc.channels_rtc[data.user] = event.channel;
+			webrtc.channels_rtc[data.user].onmessage = (event) =>{
+				webrtc.processdatachannel(event.data,webrtc.channels_rtc[data.user],webrtc);
 			}
-//			webrtc.channels_rtc[data.user].onopen = () => {
-			event.channel.onopen = () => {
+			webrtc.channels_rtc[data.user].onopen = () => {
 				webrtc.updateonopenreceiver(webrtc.channels_rtc[data.user],webrtc);
 			};				
-		    //webrtc.channels_rtc[data.user].onclose =  ()=> {
-			event.channel.onclose =  ()=> {
+		    webrtc.channels_rtc[data.user].onclose =  ()=> {
 				console.log(data.user);
 				console.log("Closing receiver ...");
 			 };				

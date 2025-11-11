@@ -1,7 +1,7 @@
 import WebRTC from './webRTC.js';
 
 let webRTC = new WebRTC();
-
+window.rtc = webRTC;
 let start_connection = () => {
   
     let controller = new WebSocket("wss://qhali-care.com/webrtc/ws/");
