@@ -66,6 +66,12 @@ export default class WebRTC{
 		};
 		let RTCSender = new window.RTCPeerConnection(rtc_configuration);
 		webrtc.conections_rtc[data.destination] = RTCSender;
+		RTCSender.oniceconnectionstatechange = async () => {
+			if (RTCSender.iceConnectionState === 'connected' || RTCSender.iceConnectionState === 'completed') {
+				const connectionType = await webrtc.get_connection_type(data.destination);
+				console.log(`Connection established with ${data.destination}: **${connectionType}**`);
+			}
+		};
 		RTCSender.onicecandidate = function (evt) {
 			if (!evt.candidate) return;
 			webrtc.onIceCandidate(evt,{user:data.destination});
@@ -114,6 +120,47 @@ export default class WebRTC{
 		);
 	}
 
+	async get_connection_type(user) {
+        const rtcConnection = this.conections_rtc[user];
+
+        if (!rtcConnection) {
+            console.error(`RTC connection not found for user: ${user}`);
+            return "Connection Not Found";
+        }
+
+        if (rtcConnection.iceConnectionState !== 'connected' && rtcConnection.iceConnectionState !== 'completed') {
+            console.log(`ICE connection state is ${rtcConnection.iceConnectionState}. Waiting for connection to stabilize.`);
+            return "Connecting...";
+        }
+
+        try {
+            const statsReport = await rtcConnection.getStats();
+            let selectedCandidatePair = null;
+
+            statsReport.forEach(report => {
+                // Find the selected candidate pair
+                if (report.type === 'candidate-pair' && report.state === 'succeeded') {
+                    selectedCandidatePair = report;
+                }
+            });
+
+            if (selectedCandidatePair) {
+                const localCandidateStats = statsReport.get(selectedCandidatePair.localCandidateId);
+                
+                if (localCandidateStats && localCandidateStats.candidateType === 'relay') {
+                    return "TURN/Relay";
+                } else if (localCandidateStats) {
+                    // Check local candidate type (srflx or host)
+                    return `${localCandidateStats.candidateType.toUpperCase()}-Assisted P2P`;
+                }
+            }
+            return "Unknown (ICE Candidate Pair not selected)";
+
+        } catch (error) {
+            console.error("Error fetching WebRTC stats:", error);
+            return "Error fetching stats";
+        }
+    }
 	receive_call = (data,num=0,processDataChannel= console.log) => {
 		let webrtc = this;
 		
@@ -126,7 +173,12 @@ export default class WebRTC{
 		};
 		let RTCReceiver= new window.RTCPeerConnection(rtc_configuration);
 		webrtc.conections_rtc[data.user]= RTCReceiver;
-
+		RTCReceiver.oniceconnectionstatechange = async () => {
+			if (RTCReceiver.iceConnectionState === 'connected' || RTCReceiver.iceConnectionState === 'completed') {
+				const connectionType = await webrtc.get_connection_type(data.user);
+				console.log(`Connection established with ${data.user}: **${connectionType}**`);
+			}
+		};
 		//RTCReceiver.ondatachannel = (event)=> processDataChannel(event);
 		RTCReceiver.ondatachannel = (event) =>{
 			webrtc.channels_rtc[data.user] = event.channel;
