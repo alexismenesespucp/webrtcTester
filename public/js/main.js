@@ -55,7 +55,7 @@ let messageAction = {
 
 
 function process_message(data,signaling) {
-    let received_data = signaling.utils.safelyParseJSON(data);
+    let received_data = safelyParseJSON(data);
     if (received_data !== "") {
         if(received_data.typedata in messageAction)
             messageAction[received_data.typedata](received_data,signaling);
@@ -97,4 +97,16 @@ let startStreaming = ()=>{//音声を取得
     .catch(function(err) {
         console.log(err);
     });
+}
+
+function safelyParseJSON(json) {
+    let parsed = "";
+  
+    try {
+      parsed = JSON.parse(json);
+    } catch (e) {
+      console.log("there is an error on JSON");
+    }
+  
+    return parsed;
 }
