@@ -58,7 +58,11 @@ export default class WebRTC{
 	make_call = (data,num=0,processDataChannel=console.log) => {
 		let webrtc = this;
 		let rtc_configuration = {
-			iceServers: [{ "urls": ["stun:stun1.l.google.com:19302"] }],
+			iceServers: [{ 
+					urls: 'turn:qhali-care.com:3478',
+					username: 'webrtc',
+      				credential: 'verysecret'
+			}],
 		};
 		let RTCSender = new window.RTCPeerConnection(rtc_configuration);
 		webrtc.conections_rtc[data.destination] = RTCSender;
@@ -114,7 +118,11 @@ export default class WebRTC{
 		let webrtc = this;
 		
 		let rtc_configuration = {
-			iceServers: [{ "urls": ["stun:stun1.l.google.com:19302"] }],
+			iceServers: [{ 
+					urls: 'turn:qhali-care.com:3478',
+					username: 'webrtc',
+      				credential: 'verysecret'
+			}],
 		};
 		let RTCReceiver= new window.RTCPeerConnection(rtc_configuration);
 		webrtc.conections_rtc[data.user]= RTCReceiver;
