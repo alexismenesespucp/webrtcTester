@@ -71,9 +71,9 @@ export default class WebRTC{
 			webrtc.addstreamfrommadecall(evt.stream,data.place)
 		};
 		let channel = RTCSender.createDataChannel("RobotInstrucctions");
-		processDataChannel(data,channel,webrtc);
+		//processDataChannel(data,channel,webrtc);
 		/*
-		webrtc.channels_rtc[data.destination] = channel;
+		webrtc.channels_rtc[data.destination] = channel;*/
 		channel.onopen =  () => {
 			webrtc.updateonopencaller(channel,webrtc);
 		};		
@@ -83,9 +83,10 @@ export default class WebRTC{
 		};				  	
 		
 		channel.onmessage = (event)=>{
-			webrtc.processdatachannel(event.data,channel,webrtc);
+			console.log(event.data);
+			//webrtc.processdatachannel(event.data,channel,webrtc);
 		}
-		*/
+		
 		RTCSender.addStream(webrtc.local_stream[num]);//streamに追加
 		RTCSender.createOffer().then( (desc) =>{
 			RTCSender.setLocalDescription(new RTCSessionDescription(desc)).then(()=>{
@@ -119,21 +120,25 @@ export default class WebRTC{
 		let RTCReceiver= new window.RTCPeerConnection(rtc_configuration);
 		webrtc.conections_rtc[data.user]= RTCReceiver;
 
-		RTCReceiver.ondatachannel = (event)=> processDataChannel(event);
-		/*(event) =>{
-			webrtc.channels_rtc[data.user] = event.channel;
-			webrtc.channels_rtc[data.user].onmessage = (event) =>{
-				webrtc.processdatachannel(event.data,webrtc.channels_rtc[data.user],webrtc);
+		//RTCReceiver.ondatachannel = (event)=> processDataChannel(event);
+		RTCReceiver.ondatachannel = (event) =>{
+			//webrtc.channels_rtc[data.user] = event.channel;
+			//webrtc.channels_rtc[data.user].onmessage = (event) =>{
+			event.channel.onmessage = (event) =>{
+				console.log(event.data);
+				//webrtc.processdatachannel(event.data,webrtc.channels_rtc[data.user],webrtc);
 			}
-			webrtc.channels_rtc[data.user].onopen = () => {
+//			webrtc.channels_rtc[data.user].onopen = () => {
+			event.channel.onopen = () => {
 				webrtc.updateonopenreceiver(webrtc.channels_rtc[data.user],webrtc);
 			};				
-		    webrtc.channels_rtc[data.user].onclose =  ()=> {
+		    //webrtc.channels_rtc[data.user].onclose =  ()=> {
+			event.channel.onclose =  ()=> {
 				console.log(data.user);
 				console.log("Closing receiver ...");
 			 };				
 			
-		}*/
+		}
 		
 		RTCReceiver.onicecandidate = (evt) => {
 			if (!evt.candidate) return;
