@@ -70,8 +70,8 @@ export default class WebRTC{
 			webrtc.remote_streams[data.destination] = evt.stream;
 			webrtc.addstreamfrommadecall(evt.stream,data.place)
 		};
-		let channel = RTCSender.createDataChannel("RobotInstrucctions");
-		processDataChannel(data,channel,webrtc);
+		//let channel = RTCSender.createDataChannel("RobotInstrucctions");
+		//processDataChannel(data,channel,webrtc);
 		/*
 		webrtc.channels_rtc[data.destination] = channel;
 		channel.onopen =  () => {
@@ -119,7 +119,7 @@ export default class WebRTC{
 		let RTCReceiver= new window.RTCPeerConnection(rtc_configuration);
 		webrtc.conections_rtc[data.user]= RTCReceiver;
 
-		RTCReceiver.ondatachannel = (event)=> processDataChannel(event);
+		//RTCReceiver.ondatachannel = (event)=> processDataChannel(event);
 		/*(event) =>{
 			webrtc.channels_rtc[data.user] = event.channel;
 			webrtc.channels_rtc[data.user].onmessage = (event) =>{
@@ -140,14 +140,14 @@ export default class WebRTC{
 			this.onIceCandidate(evt,data);
 		};
 	  
-		RTCReceiver.onaddstream = (evt) => {//remotoのstreamが追加された時の処理
+		RTCReceiver.onaddstream = (evt) => {
 			webrtc.remote_streams[data.user] = evt.stream;
 			webrtc.addstreamfromreceivedcall(evt.stream,data.place)
 		};
 		
 		RTCReceiver.setRemoteDescription(new RTCSessionDescription(data.sdp))
 		.then( ()=> {
-				RTCReceiver.addStream(webrtc.local_stream[num]);//streamに追加	
+				RTCReceiver.addStream(webrtc.local_stream[num]);
 				console.log("sending stream:",webrtc.local_stream[num]);		
 				RTCReceiver.createAnswer()
 				.then(function (sdp) {
