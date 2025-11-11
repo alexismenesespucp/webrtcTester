@@ -89,8 +89,8 @@ function placingvideo(stream){
   document.getElementById("receivedVideo").srcObject=stream;
 }
 
-let startStreaming = ()=>{//音声を取得
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+let startStreaming = ()=>{
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
     .then(function(stream) {
       webRTC.addLocalStream(stream);
       document.getElementById("localvideo").srcObject = stream;
