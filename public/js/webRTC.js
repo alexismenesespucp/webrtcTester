@@ -70,8 +70,8 @@ export default class WebRTC{
 			webrtc.remote_streams[data.destination] = evt.stream;
 			webrtc.addstreamfrommadecall(evt.stream,data.place)
 		};
-		//let channel = RTCSender.createDataChannel("RobotInstrucctions");
-		//processDataChannel(data,channel,webrtc);
+		let channel = RTCSender.createDataChannel("RobotInstrucctions");
+		processDataChannel(data,channel,webrtc);
 		/*
 		webrtc.channels_rtc[data.destination] = channel;
 		channel.onopen =  () => {
@@ -119,7 +119,7 @@ export default class WebRTC{
 		let RTCReceiver= new window.RTCPeerConnection(rtc_configuration);
 		webrtc.conections_rtc[data.user]= RTCReceiver;
 
-		//RTCReceiver.ondatachannel = (event)=> processDataChannel(event);
+		RTCReceiver.ondatachannel = (event)=> processDataChannel(event);
 		/*(event) =>{
 			webrtc.channels_rtc[data.user] = event.channel;
 			webrtc.channels_rtc[data.user].onmessage = (event) =>{

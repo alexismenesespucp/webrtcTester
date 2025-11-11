@@ -47,6 +47,7 @@ document.getElementById("call").onclick = make_call;
 let messageAction = {
     login: (data) => login(data),
     answer_call : (data) => webRTC.answer_call(data),
+    offer_call:(data)=>webRTC.receive_call(data),
     icecandidate_request : (data) => webRTC.ice_candidate(data),
     join : (data) => addPreviousConnections(data),
     new_user : (data) => addConnectionOptions(data),
